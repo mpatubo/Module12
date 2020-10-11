@@ -76,8 +76,7 @@ function buildCharts(sample) {
     // 7. Create the yticks for the bar chart.
     // Hint: Get the the top 10 otu_ids and map them in descending order  
     //  so the otu_ids with the most bacteria are last. 
-    // var otu_ids = otu_ids.sort (a,)=>;
-    //12.221  var yticks = otu_ids.slice(data).map (=> otu_ids(""))
+    
 
   // var top10 = sample.slice(0,10);
     //var top10_otu_ids = top10.map(sample=> 'OTU ${sample.otu_ids}');
@@ -126,7 +125,7 @@ function buildCharts(sample) {
       x: otu_ids,
       y: sample_values,
       text: otu_labels,
-      markers: {  
+      marker: {  
         size: sample_values,
         colors: otu_ids},
     mode: "markers"
@@ -140,13 +139,13 @@ function buildCharts(sample) {
     var bubbleLayout = {
       tite: "Bacteria Culture Per Sample",
       text: otu_labels,
-      xaxis: {title: "sample_values"},
-      yaxis: {title: "otu_ids"}
-      
-      
+      yaxis: {title: "sample_values"},
+      xaxis: {title: "otu_ids"},
+      height: 500,
+      width: 850
       
     };
-    Plotly.newPlot("bubble", trace, layout); 
+    Plotly.newPlot("bubble", trace, bubbleLayout); 
 
 
     // 3. Use Plotly to plot the data with the layout.
@@ -167,31 +166,50 @@ function buildCharts(sample) {
 
     // 3. Create a variable that holds the washing frequency.
 
-// // 4. Create the trace for the gauge chart.
-//     var gaugeData = [
-//       {
-//         domain:
-//         vaue: 
-//         title: {"    "}
-//         type:
-//       }
-     
-//       type: "indicator"
-//       mode: "gauge+number"
-//       titlel: 
-//     ];
+// 4. Create the trace for the gauge chart.
+
+    var frequency = result.wfreq
+    var degree = (18 * frequency)
+    var radius = 1.5
+    var radians = degree*Math.PI/180
+    var x = radius - (radius*Math.cos(radians))
+    var y = radius * Math.sin(radians)
     
-//     // 5. Create the layout for the gauge chart.
-//     var gaugeLayout = { 
+
+    var gaugeData = [
+      {
+        domain: { x: [0, 1], y: [0, 1]},
+        value: frequency, 
+        title: {text: "Belly Button Washing Frequency"},
+        type: "indicator",
+  
+        mode: "gauge+number",
+        axis: {range: [null, 9]}
+
+    }]; 
      
-//     };
-
-// //gauge---var layout = { width: 600, height: 500, margin: { t: 0, b: 0 } };
-// //Plotly.newPlot('myDiv', data, layout);
-
-
-    // 6. Use Plotly to plot the gauge data and layout.
+      
+      
+      
     
+    // 5. Create the layout for the gauge chart.
+    var gaugeLayout = {shapes: [{type: "line", 
+      x0:.5, 
+      y0: .1, x1: x, y1:y,
+      line: {color: "red", 
+      width: 3}}],
+      width: 600, height: 500, margin: { t: 0, b: 0 }, 
+      xaxis: {visible: false, range: [-1, 1]},
+      yaxis: {visible: false, range: [-1, 1]}
+     
+    };
+
+//gauge---var layout = { width: 600, height: 500, margin: { t: 0, b: 0 } };
+//Plotly.newPlot('myDiv', data, layout);
+
+
+   // 6. Use Plotly to plot the gauge data and layout.
+    Plotly.newPlot('gauge', gaugeData, gaugeLayout);
   });
 }
 
